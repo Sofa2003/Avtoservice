@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -49,6 +50,9 @@ namespace Avtoservice
             SortBox.Items.Add("Дата последнего посещения");
             SortBox.Items.Add("Количество посещений");
             SortBox.SelectedIndex = 0;
+            BirthCB.Items.Add("Без Фильтра");
+            BirthCB.Items.Add("ДР в этом месяце");
+            BirthCB.SelectedIndex = 0;
             Load();
         }
         public void Load()
@@ -103,7 +107,12 @@ namespace Avtoservice
                                       .Skip(currentPage * recordsToShow)
                                       .Take(recordsToShow)
                                       .ToList();
-            
+            if (BirthCB.SelectedItem != null && BirthCB.SelectedItem == "ДР в этом месяце")
+            {
+                var currentMonth = DateTime.Now.Month;
+                clientsQuery = clientsQuery.Where(c => c.Birthday.HasValue && c.Birthday.Value.Month == currentMonth);
+            }
+
             switch (sortBy)
             {
                 case "Фамилия":
@@ -233,7 +242,59 @@ namespace Avtoservice
             NavigationService.Navigate(pageEdit);
         }
 
+        private void btnDel_Click(object sender, RoutedEventArgs e)
+        {
+            if (clientGrid.SelectedItems.Count > 0)
+            {
+                Client client = clientGrid.SelectedItems[0] as Client;
 
+                if (client != null)
+                {
+                    var context = helper.GetContext();
+
+                    // Проверяем наличие связанных тегов
+                    var relatedTags = context.TagOfClient.Where(toc => toc.ClientID == client.ID).ToList();
+
+                    if (relatedTags.Any())
+                    {
+                        // Если есть связанные теги, выводим сообщение и удаляем их
+                        var result = MessageBox.Show("У данного пользователя есть привязанные теги. Вы уверены, что хотите удалить пользователя и все связанные теги?",
+                                                      "Подтверждение удаления",
+                                                      MessageBoxButton.YesNo,
+                                                      MessageBoxImage.Warning);
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            // Удаляем связанные теги
+                            context.TagOfClient.RemoveRange(relatedTags);
+                        }
+                        else
+                        {
+                            return; // Если пользователь отменил, выходим из метода
+                        }
+                    }
+
+                    // Удаляем клиента
+                    context.Client.Remove(client);
+                    context.SaveChanges();
+
+                    // Обновляем коллекцию в интерфейсе
+                    var clientsList = clientGrid.ItemsSource as ObservableCollection<Client>;
+                    if (clientsList != null)
+                    {
+                        clientsList.Remove(client); // Удаляем клиента из коллекции
+                    }
+
+                    MessageBox.Show("Удаление успешно выполнено");
+                    Load();
+                }
+            }
+        }
+
+        private void CB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Load();
+        }
     }
 
 }

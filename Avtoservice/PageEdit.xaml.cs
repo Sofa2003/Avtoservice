@@ -56,12 +56,12 @@ namespace Avtoservice
                 CbGender.SelectedIndex = CbGender.Items.IndexOf(client.Gender.Name);
                 cl = helper.GetContext().Client.Find(client.ID);
 
-                //TagOfClient tags = new TagOfClient();
-                //var clientTags = helper.GetContext().TagOfClient.Where(tc => tc.ClientID == client.ID).Select(tc => tc.Tag).ToList();
-                //foreach (var tag in clientTags)
-                //{
-                //    dataGridTagClient.Items.Add(tag);
-                //}
+                TagOfClient tags = new TagOfClient();
+                var clientTags = helper.GetContext().TagOfClient.Where(tc => tc.ClientID == client.ID).Select(tc => tc.Tag).ToList();
+                foreach (var tag in clientTags)
+                {
+                    dataGridTagClient.Items.Add(tag);
+                }
             }
             else
             {

@@ -29,8 +29,10 @@
                             <TextBlock Text="{Binding Patronymic}" Width="100" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Text="{Binding Birthday}" Width="100" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Text="{Binding Phone}" Width="100" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Text="{Binding Email}" Width="100" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Text="{Binding RegistrationDate}" Width="100" HorizontalAlignment="Center"></TextBlock>
                             <TextBlock Text="{Binding LastVisits}" Width="100" HorizontalAlignment="Center"></TextBlock>
+                            <TextBlock Text="{Binding CountVisits}" Width="100" HorizontalAlignment="Center"></TextBlock>
                             <ItemsControl ItemsSource="{Binding TagOfClient}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -53,7 +55,7 @@
         </DataGrid>
         <Grid Grid.Row="0">
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBox x:Name="SearchBox" TextChanged="TextBox_TextChanged" Width="295" ></TextBox>
                 <ComboBox x:Name="GenderBox" ItemsSource="{Binding}" SelectionChanged="SelectedCombox" Width="97">
                     <ComboBox.ItemTemplate>
@@ -62,10 +64,22 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+                <ComboBox x:Name ="SortBox"  VerticalAlignment="Center"  Height="41" SelectionChanged="SortBox_SelectionChanged" Width="163"/>
+                <Button x:Name="btnList" Content="Посмотреть посещение"  VerticalAlignment="Center"  Width="123" Click="btnList_Click"/>
+                <Button x:Name="AddClients" Content="Добавить клиента"  Click="AddClients_Click" Width="99" />
+                <Button x:Name="btnDel" Content="удалить"   RenderTransformOrigin="0.5,0.5" Click="btnDel_Click" Width="78" >
+                    <Button.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleY="-0.376"/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="-0.393"/>
+                        </TransformGroup>
+                    </Button.RenderTransform>
+                </Button>
+                <ComboBox x:Name="BirthCB" Width="87" Margin="5" SelectionChanged="CB_SelectionChanged"/>
+
             </StackPanel>
-            <ComboBox x:Name ="SortBox" Margin="392,0,322,0" VerticalAlignment="Center" Width="186" Height="41" SelectionChanged="SortBox_SelectionChanged"/>
-            <Button x:Name="btnList" Content="Посмотреть посещение" HorizontalAlignment="Left" Margin="578,0,0,0" VerticalAlignment="Center" Height="41" Width="139" Click="btnList_Click"/>
-            <Button x:Name="AddClients" Content="Добавить клиента" Margin="717,0,0,0" Click="AddClients_Click" />
 
         </Grid>
         <Grid Grid.Row="2">
