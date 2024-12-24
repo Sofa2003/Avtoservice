@@ -26,7 +26,7 @@ namespace Avtoservice
     /// </summary>
     public partial class Page1 : Page
     {
-        private int recordsToShow = 5;
+        private int recordsToShow = 10;
         //public string iag = "";
         private int currentPage = 0; // Текущая страница
         private int totalRecords; // Общее количество записей
